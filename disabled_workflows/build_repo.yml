@@ -1,0 +1,41 @@
+name: Build and Sign Repository
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch: # Manuelles Triggern
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Install Build Tools
+        run: sudo apt-get install -y dpkg-dev gpg
+
+      - name: Import GPG Key
+        uses: crazy-max/ghaction-import-gpg@v6
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Build .deb and Update Repo
+        run: |
+          # 1. Hier käme dein Go-Core Build oder Script-Logik hin
+          # 2. Generiere die Packages-Datei
+          cd repo
+          dpkg-scanpackages . /dev/null | gzip -9c > Packages.gz
+          
+          # 3. Signiere das Repository (Instandhalter-Style)
+          gpg --batch --yes --clearsign -o InRelease Packages.gz
+          gpg --batch --yes -abs -o Release.gpg Packages.gz
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: repo
+          branch: gh-pages
