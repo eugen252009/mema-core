@@ -11,17 +11,9 @@ fi
 
 mkdir -p -m 755 /etc/apt/keyrings
 
-# Install key
-if [ -f "./mema.gpg" ]; then
-    echo "Using local mema.gpg found in directory..."
-    cat "./mema.gpg" | gpg --dearmor --yes -o "$KEYRING"
-else
-    echo "Local key not found, trying to download..."
-    curl -fsSL "https://raw.githubusercontent.com/eugen252009/mema-core/main/mema.gpg" | gpg --dearmor --yes -o "$KEYRING"
-fi
+curl -fsSL "https://raw.githubusercontent.com/eugen252009/mema-recipes/main/mema.gpg" | gpg --dearmor --yes -o "$KEYRING"
 chmod 644 "$KEYRING"
 
 # Add repo
-echo "deb [signed-by=$KEYRING] https://eugen252009.github.io/mema-core/repo ./" > "$LIST"
-echo "Mema repository configured. Run 'apt update' to sync."
+echo "deb [signed-by=$KEYRING]  https://eugen252009.github.io/mema-core/ ./" > "$LIST"
 sudo apt update
