@@ -9,6 +9,8 @@ on:
 jobs:
   test-recipes:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # WICHTIG!
 
     steps:
       - name: Checkout Recipes Repository
