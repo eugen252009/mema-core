@@ -1,27 +1,32 @@
 #!/bin/bash
 set -e
 
-PKG_NAME="lupricht-mema"
-STAGING="build/$PKG_NAME"
+PKG_NAME="mema" 
+STAGING="build/staging"
+DIST_DIR="dist"
 
-rm -rf "$STAGING"
+rm -rf "build" "$DIST_DIR"
 mkdir -p "$STAGING/DEBIAN"
-mkdir -p "$STAGING/usr/bin"
+mkdir -p "$STAGING/usr/local/bin"
 mkdir -p "$STAGING/etc/mema/recipes"
 mkdir -p "$STAGING/etc/profile.d" 
 
 cp templates/debian/control "$STAGING/DEBIAN/"
-cp core/mema "$STAGING/usr/bin/"
+cp core/mema "$STAGING/usr/local/bin/"
 cp recipes/*.sh "$STAGING/etc/mema/recipes/"
 cp configs/mema-loader.sh "$STAGING/etc/profile.d/mema.sh"
-cp templates/debian/postinst "$STAGING/DEBIAN/"
 
-chmod 755 "$STAGING/DEBIAN/postinst"
-chmod 755 "$STAGING/usr/bin/mema"
+if [ -f templates/debian/postinst ]; then
+    cp templates/debian/postinst "$STAGING/DEBIAN/"
+    chmod 755 "$STAGING/DEBIAN/postinst"
+fi
+
+chmod 755 "$STAGING/usr/local/bin/mema"
 chmod 755 "$STAGING/etc/mema/recipes/"*.sh
 chmod 644 "$STAGING/DEBIAN/control"
 chmod 644 "$STAGING/etc/profile.d/mema.sh"
 
-dpkg-deb --build "$STAGING" "${PKG_NAME}.deb"
+mkdir -p "$DIST_DIR"
+dpkg-deb --build "$STAGING" "$DIST_DIR/${PKG_NAME}.deb"
 
-echo "Done: ${PKG_NAME}.deb created with global profile loader."
+echo "Done: $DIST_DIR/${PKG_NAME}.deb created."
