@@ -84,18 +84,30 @@ mema_verify() {
 }
 
 mema_list() {
-    printf "%-15s | %-15s | %s\n" "PAKET" "AKTIV" "ALLE VERSIONEN"
+    printf "%-15s | %-15s | %s\n" "PACKAGE" "ACTIVE" "VERSIONS"
     printf -- "--------------------------------------------------------------\n"
+
+    if [ ! -d "$MEMA_ROOT" ]; then
+        return
+    fi
+
     for tool_path in "$MEMA_ROOT"/*; do
         [ -d "$tool_path" ] || continue
+        
         tool_name=$(basename "$tool_path")
-        [ "$tool_name" = "completions" ] && continue
-        case "$tool_name" in .* ) continue ;; esac
+        
+        case "$tool_name" in 
+            completions|bin|cache|.*) continue ;; 
+        esac
 
-        versions=$(ls -1 "$tool_path" | sort -V | tr '\n' ',' | sed 's/,$//')
-        real_path=$(readlink -f "$MEMA_BIN/$tool_name" 2>/dev/null || true)
+        versions=$(ls -1 "$tool_path" | sort -V | tr '\n' ',' | sed 's/,$//' | sed 's/,/, /g')
+        
         active_v="---"
-        [ -n "$real_path" ] && active_v=$(echo "$real_path" | sed -n "s|.*/$tool_name/\([^/]*\).*|\1|p")
+        if [ -L "$MEMA_BIN/$tool_name" ]; then
+            real_path=$(readlink -f "$MEMA_BIN/$tool_name")
+            active_v=$(echo "$real_path" | sed -n "s|.*/$tool_name/\([^/]*\).*|\1|p")
+        fi
+
         printf "%-15s | %-15s | %s\n" "$tool_name" "$active_v" "$versions"
     done
 }
