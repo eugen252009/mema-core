@@ -1,0 +1,40 @@
+name: Recipe Integration Test
+
+on:
+  push:
+    branches: [ main, dev ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-recipes:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Recipes Repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Import GPG Key
+        uses: crazy-max/ghaction-import-gpg@v6
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GPG_PASSPHRASE }}
+          git_user_signingkey: true
+          git_commit_gpgsign: true
+
+      - name: Set up Environment
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y dpkg-dev apt-utils
+
+      - name: Build Packages
+        run: |
+          chmod +x ./build-all.sh
+          ./build-all.sh
+
+      - name: Run Docker Integration Test
+        run: |
+          chmod +x ./tests/test.sh
+          ./tests/test.sh

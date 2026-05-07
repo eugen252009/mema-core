@@ -22,5 +22,8 @@ gzip -k -f Packages
 apt-ftparchive release . > Release
 cd ..
 
-echo "✅ Fertig! dist/ enthält jetzt:"
+gpg --batch --yes --clearsign --digest-algo SHA256 -o InRelease Release
+gpg --batch --yes --armor --detach-sign --digest-algo SHA256 -o Release.gpg Release
+
+echo "✅ Done!:"
 ls -F dist/

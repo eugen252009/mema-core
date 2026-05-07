@@ -26,7 +26,7 @@ The Mema ecosystem is split into two distinct parts:
 ### 1. Kitchen Setup
 First, install the core system (requires root):
 ```bash
-curl -fsSL https://eugen252009.github.io/mema-core/install_repo.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/eugen252009/mema-core/refs/heads/main/install_repo.sh | sudo bash
 sudo apt update && sudo apt install mema
 ```
 
