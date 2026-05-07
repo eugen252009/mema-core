@@ -11,7 +11,7 @@ fi
 
 mkdir -p -m 755 /etc/apt/keyrings
 
-curl -fsSL "https://raw.githubusercontent.com/eugen252009/mema-recipes/main/mema.gpg" | gpg --dearmor --yes -o "$KEYRING"
+curl -fsSL "https://raw.githubusercontent.com/eugen252009/mema-core/refs/heads/main/mema.gpg" | gpg --dearmor --yes -o "$KEYRING"
 chmod 644 "$KEYRING"
 
 # Add repo
