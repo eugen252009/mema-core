@@ -1,0 +1,64 @@
+Package: mema
+Version: 0.0.1
+Architecture: all
+Maintainer: Eugen Lupricht <mema@lupricht.net>
+Depends: curl, bash, git, jq, tar, xz-utils, ca-certificates, fzf
+Recommends: unzip
+Filename: ./mema.deb
+Size: 4070
+MD5sum: 1abbeed3843e348ce891186d5f19e57e
+SHA1: a217bc165fd3c95c1eafa44942c6561e43c93146
+SHA256: 74a7ce13c6810b6fd2337bcffb9a2c180626cadd358d8f030aef1ed82c62507a
+Section: utils
+Priority: optional
+Description: The Minimalist Meta-Manager
+ Who needs an OS when you have apt and sh?
+ Mema is a lightweight POSIX-sh framework to manage binaries
+ and completions in /opt and /etc without the bloat.
+
+Package: mema-Go
+Version: 1-1
+Architecture: all
+Maintainer: Eugen Lupricht <mema@lupricht.net>
+Depends: mema, curl, tar, jq
+Filename: ./mema-go_1-1_all.deb
+Size: 1602
+MD5sum: 559bf5c5f5027836192501dead6d580b
+SHA1: ebeafba6d995d41965048506f2ad83202770dc65
+SHA256: b182b41c5c60135eeff1cb440c7fe8932054084c6382e3f1ce910bacb1bc5bc5
+Section: devel
+Priority: optional
+Description: Auto-generated default Go installer (Mema recipe)
+ This package provides the pre-baked Mema recipe and execution
+ logic for Go. It acts as the permanent base layer.
+ .
+ Update Strategy:
+  - For automatic updates: Install 'mema-go-latest'.
+  - For manual control: Run 'sudo mema install go latest'.
+ .
+ This layer is versioned independently of the Go toolchain.
+ Verification is performed against official host checksums.
+
+Package: mema-go-latest
+Version: 1.26.3
+Architecture: all
+Maintainer: Eugen Lupricht <mema@lupricht.net>
+Depends: mema, mema-go
+Filename: ./mema-go-latest_1.26.3_amd64.deb
+Size: 902
+MD5sum: 374115e2bcc8d6a706f7d3b11a8eb663
+SHA1: ac3959df837ff0eaf8f183784ec52f9697f94eca
+SHA256: 9007eff6567684e95dbace49ddd93cc50aca3ad6c5df70808134090cf706e462
+Section: utils
+Priority: optional
+Description: Auto-generated lifecycle trigger for Go (1.26.3).
+ This package acts as the execution layer within the Mema ecosystem.
+ It does not contain the Go binaries itself, but triggers the
+ deterministic installation and verification of Go 1.26.3
+ via the Mema recipe engine.
+ .
+ Features:
+  - Automated bootstrap of the specified Go version.
+  - Checksum verification against the original Host (e.g., go.dev).
+  - Atomic symlinking into the system PATH (/usr/local/bin).
+
